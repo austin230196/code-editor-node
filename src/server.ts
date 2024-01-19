@@ -16,10 +16,12 @@ import AdvancedError from "./utils/AdvancedError";
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({server});
+exports.app;
 
 //json
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
 
 //cors
 app.use((req, res, next) => {
@@ -31,8 +33,15 @@ app.use((req, res, next) => {
     next();
 })
 
+
 //register routes
 app.use("/api/v1", apiRoutes);
+app.use("/", (req, res, next) => {
+    return res.status(200).json({
+        message: "API ALIVE!!!",
+        success: true
+    })
+})
 
 //wayward route handler
 app.use((req, res, next) => {
