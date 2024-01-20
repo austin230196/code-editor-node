@@ -3,6 +3,8 @@ import type { Request, Response, NextFunction } from "express";
 import AdvancedError from "../utils/AdvancedError";
 import Room from "../models/Room";
 import getId from "../utils/getId";
+import Judge0 from "../services/Judge0";
+import CacheService from "../services/CacheService";
 
 
 
@@ -20,6 +22,26 @@ export const getRoom = async(req: Request, res: Response, next: NextFunction) =>
             data: room
         })
     }catch(e){ next(e);}
+}
+
+
+export const getCompilers = async(req: Request, res: Response, next: NextFunction) => {
+    try{
+        //get apis
+        let languages = await CacheService.get("languages");
+        if(!languages){
+            const res = await Judge0.getLanguages();
+            if(!res.success) throw new AdvancedError(res.message, 500);
+            languages = res.data;
+            await CacheService.set("languages", JSON.stringify(languages));
+        }
+        console.log({languages})
+        return res.status(200).json({
+            message: "Compilers fetched successfully",
+            success: true,
+            data: languages
+        });
+    }catch(e){next(e)}
 }
 
 

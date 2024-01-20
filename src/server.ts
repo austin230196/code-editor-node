@@ -12,11 +12,12 @@ loadEnv.config();
 
 import apiRoutes from "./routes";
 import AdvancedError from "./utils/AdvancedError";
+import redisClient from "./utils/redis";
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocketServer({server});
-exports.app;
+exports.app = app;
 
 //json
 app.use(express.json());
@@ -59,6 +60,7 @@ app.use((error: AdvancedError, req: Request, res: Response, next: NextFunction) 
 
 server.on("error", err => {
     console.log("Sever error emitter: ", err.message);
+    redisClient.disconnect();
 })
 
 
@@ -71,6 +73,7 @@ wss.on("connection", (ws, req) => {
 
 server.listen(process.env.PORT || 8000, async () => {
     try{
+        await redisClient.connect();
         await mongoose.connect(process.env.MONGO_URL!, {});
     }catch(e: any){ console.log("Mongoose error: ", e.message) }
     const address = server.address() as AddressInfo;
