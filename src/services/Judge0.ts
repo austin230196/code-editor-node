@@ -10,7 +10,6 @@ export default class Judge0 {
                 'X-RapidAPI-Key': process.env.JUDGE0_KEY,
                 'X-RapidAPI-Host': process.env.JUDGE0_HOST,
                 'Content-Type': 'application/json',
-                'content-type': 'application/json'
             }
         });
         return res.data;

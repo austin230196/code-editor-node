@@ -29,10 +29,9 @@ export const getCompilers = async(req: Request, res: Response, next: NextFunctio
     try{
         //get apis
         let languages = await CacheService.get("languages");
+        languages = JSON.parse(languages!);
         if(!languages){
-            const res = await Judge0.getLanguages();
-            if(!res.success) throw new AdvancedError(res.message, 500);
-            languages = res.data;
+            languages = await Judge0.getLanguages();
             await CacheService.set("languages", JSON.stringify(languages));
         }
         console.log({languages})

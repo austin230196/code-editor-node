@@ -75,7 +75,7 @@ server.listen(process.env.PORT || 8000, async () => {
     try{
         await redisClient.connect();
         await mongoose.connect(process.env.MONGO_URL!, {});
-    }catch(e: any){ console.log("Mongoose error: ", e.message) }
-    const address = server.address() as AddressInfo;
-    console.log(`Sever has started on http://${address.address}:${address.port}`);
+        const address = server.address() as AddressInfo;
+        console.log(`Server has started on http://${address.address}:${address.port}`);
+    }catch(e: any){ console.log("Mongoose error: " + e.message) }
 })
